@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, Menu, ipcMain} = require('electron');
 const path = require('path');
-const rootPath = require('electron-root-path').rootPath;
+const isDev = require('electron-is-dev');
 
 
 let mainWindow;
@@ -45,7 +45,7 @@ function createWindow () {
   })
   console.log(rootPath);
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
+  mainWindow.loadURL(isDev ? ` file://${path.join(__dirname, '../build/index.html')}`: 'localhost:3000');
   
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -60,15 +60,9 @@ function createAddWindow () {
       nodeIntegration: false,
       preload: __dirname + '/preload.js'
     }
-  })
-  let url = require('url').format({
-    protocol: 'file',
-    slashes: true,
-    pathname: `file://${path.join('', '../build/index.html#/add')}`
-    
-  })
+  });
   // mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
-  addWindow.loadURL(`file://${path.join(__dirname, '../build/index.html#/add')}`);
+  addWindow.loadURL(isDev ? `file://${path.join(__dirname, '../build/index.html#/add')}`: 'localhost:3000/#/add');
 }
 
 ipcMain.on('item:add', (e, item) => {
